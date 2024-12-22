@@ -1,5 +1,30 @@
 import socket
 import threading
+import os
+
+def display_banner():
+    banner = r"""
+    
+
+░▒▓███████▓▒░░▒▓███████▓▒░ ░▒▓██████▓▒░ ░▒▓███████▓▒░ 
+░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░        
+░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░        
+░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓██████▓▒░  
+░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░ 
+░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░ 
+░▒▓███████▓▒░░▒▓███████▓▒░ ░▒▓██████▓▒░░▒▓███████▓▒░ 
+    """
+    os.system('clear' if os.name == 'posix' else 'cls')  # Clear the terminal screen
+    print(banner)
+
+def main():
+    display_banner()
+    # Add your script's functionality here
+    print("Welcome to the DDOS Educational Script")
+    print("This script is for educational purposes only.")
+
+if __name__ == "__main__":
+    main()
 
 # Set a list of IP addresses (optional, as this won't truly spoof IPs in this form)
 ip_addresses = ['8.8.4.4', '1.1.1.1']
