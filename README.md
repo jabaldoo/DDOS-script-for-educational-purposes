@@ -1,43 +1,31 @@
 # DDOS Script for Educational Purposes
 
-⚠️ **Disclaimer:** This script is intended strictly for **educational purposes** and to raise awareness about the potential impacts of Distributed Denial of Service (DDOS) attacks. The use of this script against any system without proper authorization is **illegal** and may result in severe consequences. Always adhere to ethical guidelines and legal regulations when using or learning about such tools.
+This is a simple Python script designed to simulate a **Distributed Denial of Service (DDOS)** attack for **educational purposes only**. It demonstrates how a basic DDOS attack works by sending multiple TCP connections to a target IP and port.
+
+**Disclaimer**: This script is intended for educational and ethical use only. Do not use it for illegal or malicious activities. The author is not responsible for any misuse of this script.
+
+# Preview💻
+
+[Screenshot] 
+---
+
+## Features
+- **Multi-threading**: Simulates multiple connections simultaneously.
+- **Rate Limiting**: Controls the number of requests per second.
+- **Logging**: Logs connection attempts and errors to a file (`ddos.log`).
+- **User Input**: Prompts the user for target IP, port, number of threads, and rate limit.
+- **Banner Display**: Displays a custom banner when the script is launched.
 
 ---
 
-## 🚀 About This Project
-
-This repository provides a basic script demonstrating how a Distributed Denial of Service (DDOS) attack can be simulated. Its purpose is to educate users on the mechanics of such attacks and to emphasize the importance of proper cybersecurity measures to mitigate them.
-
----
-
-## 📋 Features
-
-- Simulates a DDOS attack for educational environments
-- Demonstrates basic networking concepts and traffic generation
-- Helps users understand attack detection and mitigation strategies
+## Prerequisites
+- Python 3.x
+- `argparse`, `logging`, `socket`, `threading`, and `time` modules (included in Python's standard library).
 
 ---
 
-## ⚙️ How It Works
-
-The script generates a high volume of traffic aimed at a target server or IP address, mimicking a real-world DDOS scenario. By studying this behavior in a controlled environment, users can learn:
-
-- How DDOS attacks overwhelm network resources
-- Methods to detect unusual traffic patterns
-- Best practices for securing servers against such threats
-
----
-
-## 🛠️ Installation & Setup
-
-### Prerequisites
-
-- Python 3.x installed on your system
-- A secure, controlled environment for testing
-
-### Steps to Set Up
-
-1. Clone this repository:
+## Installation
+1. Clone the repository:
    ```bash
    git clone https://github.com/jabaldoo/DDOS-script-for-educational-purposes.git
-    cd DDOS-script-for-educational-purposes
+   cd DDOS-script-for-educational-purposes
