@@ -6,8 +6,9 @@ This is a simple Python script designed to simulate a **Distributed Denial of Se
 
 # Preview💻
 
-![Screenshot](./screenshots/Screenshot_20250201_210158.png)
+![Screenshot](https://github.com/jabaldoo/DDOS-script-for-educational-purposes/blob/main/screenshoots/Screenshot_20250201_210158.png)
 ---
+
 
 ## Features
 - **Multi-threading**: Simulates multiple connections simultaneously.
