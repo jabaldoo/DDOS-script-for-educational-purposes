@@ -15,14 +15,6 @@ This is a simple Python script designed to simulate a **Distributed Denial of Se
 - **Rate Limiting**: Controls the number of requests per second.
 - **Logging**: Logs connection attempts and errors to a file (`ddos.log`).
 - **User Input**: Prompts the user for target IP, port, number of threads, and rate limit.
-- **Banner Display**: Displays a custom banner when the script is launched.
-
----
-
-## Prerequisites
-- Python 3.x
-- `argparse`, `logging`, `socket`, `threading`, and `time` modules (included in Python's standard library).
-
 ---
 
 ## Installation
