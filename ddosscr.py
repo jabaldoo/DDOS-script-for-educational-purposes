@@ -32,7 +32,8 @@ def attack(target_ip, target_port):
                 # Send some data to keep connection open
                 s.sendall(b"GET / HTTP/1.1\r\nHost: localhost\r\n\r\n")
                 time.sleep(1)  # Maintain connection briefly
-        except Exception as e:
+ 
+ except Exception as e:
             logging.error(f"Error: {e}")
             time.sleep(0.5)
 
